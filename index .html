@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Registration System</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet">
+<style>
+  :root {
+    --brand: #2c5f7c;
+    --brand-dark: #1e4257;
+    --accent: #e8a33d;
+    --bg-soft: #f5f7fa;
+  }
+  body {
+    background: var(--bg-soft);
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  .navbar-brand i { color: var(--accent); margin-right: 8px; }
+  .navbar-custom {
+    background: linear-gradient(90deg, var(--brand-dark), var(--brand));
+  }
+  .card-header-custom {
+    background: var(--brand);
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn-brand {
+    background: var(--brand);
+    color: #fff;
+    border: none;
+  }
+  .btn-brand:hover {
+    background: var(--brand-dark);
+    color: #fff;
+  }
+  .required-mark { color: #dc3545; }
+  .table thead th {
+    background: var(--brand-dark);
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .invalid-feedback { display: none; }
+  .was-validated .form-control:invalid ~ .invalid-feedback,
+  .form-control.is-invalid ~ .invalid-feedback {
+    display: block;
+  }
+  #studentTableWrapper { overflow-x: auto; }
+  .empty-state { color: #6c757d; padding: 2rem 0; text-align: center; }
+  footer { color: #6c757d; font-size: 0.85rem; }
+  @media (max-width: 576px) {
+    .card-body { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== VIEW: Navigation Bar ===================== -->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm sticky-top">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">
+      <i class="fa-solid fa-graduation-cap"></i>Student Registration System
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="#registerSection"><i class="fa-solid fa-user-plus me-1"></i>Register</a></li>
+        <li class="nav-item"><a class="nav-link" href="#listSection"><i class="fa-solid fa-list me-1"></i>Student List</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-4">
+
+  <!-- ===================== VIEW: Registration Form ===================== -->
+  <div class="row" id="registerSection">
+    <div class="col-12">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header card-header-custom">
+          <i class="fa-solid fa-user-plus me-2"></i>New Student Registration
+        </div>
+        <div class="card-body">
+          <form id="studentForm" novalidate>
+            <div class="row g-3">
+
+              <div class="col-md-6">
+                <label for="fullName" class="form-label">Full Name <span class="required-mark">*</span></label>
+                <input type="text" class="form-control" id="fullName" placeholder="e.g. Ananya Rao" required minlength="3">
+                <div class="invalid-feedback">Please enter a valid name (min 3 characters).</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email Address <span class="required-mark">*</span></label>
+                <input type="email" class="form-control" id="email" placeholder="student@example.com" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="mobile" class="form-label">Student Mobile Number <span class="required-mark">*</span></label>
+                <input type="tel" class="form-control" id="mobile" placeholder="10-digit mobile number" required pattern="[0-9]{10}">
+                <div class="invalid-feedback">Enter a valid 10-digit mobile number.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="parentMobile" class="form-label">Parent's Mobile Number <span class="required-mark">*</span></label>
+                <input type="tel" class="form-control" id="parentMobile" placeholder="10-digit mobile number" required pattern="[0-9]{10}">
+                <div class="invalid-feedback">Enter a valid 10-digit parent's mobile number.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="dob" class="form-label">Date of Birth <span class="required-mark">*</span></label>
+                <input type="date" class="form-control" id="dob" required>
+                <div class="invalid-feedback">Please select a date of birth.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="gender" class="form-label">Gender <span class="required-mark">*</span></label>
+                <select class="form-select" id="gender" required>
+                  <option value="" selected disabled>Choose...</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Other</option>
+                </select>
+                <div class="invalid-feedback">Please select a gender.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label for="course" class="form-label">Course / Class <span class="required-mark">*</span></label>
+                <input type="text" class="form-control" id="course" placeholder="e.g. B.Tech CSE - Year 2" required minlength="2">
+                <div class="invalid-feedback">Please enter a course or class.</div>
+              </div>
+
+              <div class="col-12">
+                <label for="address" class="form-label">Address <span class="required-mark">*</span></label>
+                <textarea class="form-control" id="address" rows="2" placeholder="House no, street, city, state, PIN code" required minlength="10"></textarea>
+                <div class="invalid-feedback">Please enter a complete address (min 10 characters).</div>
+              </div>
+
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+              <button type="submit" class="btn btn-brand px-4"><i class="fa-solid fa-floppy-disk me-1"></i>Register Student</button>
+              <button type="reset" class="btn btn-outline-secondary px-4" id="resetBtn"><i class="fa-solid fa-rotate-left me-1"></i>Clear</button>
+            </div>
+            <div id="formAlert" class="alert alert-success mt-3 d-none" role="alert">
+              <i class="fa-solid fa-circle-check me-1"></i>Student registered successfully!
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== VIEW: Student List ===================== -->
+  <div class="row" id="listSection">
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
+          <span><i class="fa-solid fa-list me-2"></i>Registered Students</span>
+          <span class="badge bg-light text-dark" id="studentCount">0</span>
+        </div>
+        <div class="card-body">
+          <div id="studentTableWrapper">
+            <table class="table table-striped table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Mobile</th>
+                  <th>Parent's Mobile</th>
+                  <th>DOB</th>
+                  <th>Gender</th>
+                  <th>Course</th>
+                  <th>Address</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="studentTableBody">
+                <!-- Rows injected by Controller -->
+              </tbody>
+            </table>
+            <div class="empty-state" id="emptyState">
+              <i class="fa-solid fa-inbox fa-2x mb-2"></i>
+              <p>No students registered yet. Use the form above to add one.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center mt-4">
+    &copy; <span id="year"></span> Student Registration System &mdash; Built with Bootstrap 5
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script>
+/* =========================================================================
+   MVC ARCHITECTURE (client-side simulation)
+   - Model:      StudentModel      -> data + persistence logic
+   - View:       StudentView       -> DOM rendering, no business logic
+   - Controller: StudentController -> wires form/events to Model & View
+   ========================================================================= */
+
+// -------------------- MODEL --------------------
+class StudentModel {
+  constructor() {
+    this.students = [];
+    this.nextId = 1;
+  }
+
+  addStudent(data) {
+    const record = { id: this.nextId++, ...data };
+    this.students.push(record);
+    return record;
+  }
+
+  removeStudent(id) {
+    this.students = this.students.filter(s => s.id !== id);
+  }
+
+  getAll() {
+    return this.students;
+  }
+
+  count() {
+    return this.students.length;
+  }
+}
+
+// -------------------- VIEW --------------------
+class StudentView {
+  constructor() {
+    this.tableBody = document.getElementById('studentTableBody');
+    this.emptyState = document.getElementById('emptyState');
+    this.countBadge = document.getElementById('studentCount');
+    this.formAlert = document.getElementById('formAlert');
+  }
+
+  escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  render(students) {
+    this.tableBody.innerHTML = '';
+
+    if (students.length === 0) {
+      this.emptyState.style.display = 'block';
+    } else {
+      this.emptyState.style.display = 'none';
+      students.forEach((s, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${this.escapeHtml(s.fullName)}</td>
+          <td>${this.escapeHtml(s.email)}</td>
+          <td>${this.escapeHtml(s.mobile)}</td>
+          <td>${this.escapeHtml(s.parentMobile)}</td>
+          <td>${this.escapeHtml(s.dob)}</td>
+          <td>${this.escapeHtml(s.gender)}</td>
+          <td>${this.escapeHtml(s.course)}</td>
+          <td>${this.escapeHtml(s.address)}</td>
+          <td><button class="btn btn-sm btn-outline-danger delete-btn" data-id="${s.id}"><i class="fa-solid fa-trash"></i></button></td>
+        `;
+        this.tableBody.appendChild(row);
+      });
+    }
+
+    this.countBadge.textContent = students.length;
+  }
+
+  showSuccessAlert() {
+    this.formAlert.classList.remove('d-none');
+    setTimeout(() => this.formAlert.classList.add('d-none'), 2500);
+  }
+
+  clearValidation(form) {
+    form.classList.remove('was-validated');
+    [...form.querySelectorAll('.is-invalid')].forEach(el => el.classList.remove('is-invalid'));
+  }
+}
+
+// -------------------- CONTROLLER --------------------
+class StudentController {
+  constructor(model, view) {
+    this.model = model;
+    this.view = view;
+    this.form = document.getElementById('studentForm');
+
+    this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    this.view.tableBody.addEventListener('click', (e) => this.handleDelete(e));
+    document.getElementById('resetBtn').addEventListener('click', () => this.view.clearValidation(this.form));
+
+    // live validation feedback
+    [...this.form.elements].forEach(el => {
+      if (el.tagName === 'BUTTON') return;
+      el.addEventListener('input', () => this.validateField(el));
+      el.addEventListener('blur', () => this.validateField(el));
+    });
+  }
+
+  validateField(el) {
+    if (el.checkValidity()) {
+      el.classList.remove('is-invalid');
+      el.classList.add('is-valid');
+    } else {
+      el.classList.remove('is-valid');
+      el.classList.add('is-invalid');
+    }
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const mobileEl = document.getElementById('mobile');
+    const parentMobileEl = document.getElementById('parentMobile');
+
+    // extra cross-field validation: student and parent numbers must differ
+    if (mobileEl.value && parentMobileEl.value && mobileEl.value === parentMobileEl.value) {
+      parentMobileEl.setCustomValidity("Parent's mobile number should be different from student's.");
+    } else {
+      parentMobileEl.setCustomValidity('');
+    }
+
+    if (!this.form.checkValidity()) {
+      this.form.classList.add('was-validated');
+      [...this.form.elements].forEach(el => {
+        if (el.tagName !== 'BUTTON') this.validateField(el);
+      });
+      return;
+    }
+
+    const data = {
+      fullName: document.getElementById('fullName').value.trim(),
+      email: document.getElementById('email').value.trim(),
+      mobile: mobileEl.value.trim(),
+      parentMobile: parentMobileEl.value.trim(),
+      dob: document.getElementById('dob').value,
+      gender: document.getElementById('gender').value,
+      course: document.getElementById('course').value.trim(),
+      address: document.getElementById('address').value.trim()
+    };
+
+    this.model.addStudent(data);
+    this.view.render(this.model.getAll());
+    this.view.showSuccessAlert();
+
+    this.form.reset();
+    this.view.clearValidation(this.form);
+    [...this.form.querySelectorAll('.is-valid')].forEach(el => el.classList.remove('is-valid'));
+  }
+
+  handleDelete(e) {
+    const btn = e.target.closest('.delete-btn');
+    if (!btn) return;
+    const id = Number(btn.dataset.id);
+    if (confirm('Remove this student record?')) {
+      this.model.removeStudent(id);
+      this.view.render(this.model.getAll());
+    }
+  }
+}
+
+// -------------------- BOOTSTRAP THE APP --------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const model = new StudentModel();
+  const view = new StudentView();
+  new StudentController(model, view);
+  document.getElementById('year').textContent = new Date().getFullYear();
+});
+</script>
+</body>
+</html>
